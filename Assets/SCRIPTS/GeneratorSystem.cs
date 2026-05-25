@@ -17,7 +17,7 @@ public class GeneratorSystem : MonoBehaviour
     public GameObject progressBarUI;
     public Image progressBarFill;
     public DoorController door;
-    public TextMeshProUGUI interactPromptText; // ganti dari GameObject
+    public TextMeshProUGUI interactPromptText;
 
     private float holdTimer = 0f;
     private bool isActivated = false;
@@ -29,12 +29,10 @@ public class GeneratorSystem : MonoBehaviour
         float distance = Vector2.Distance(transform.position, player.position);
         bool isInRange = distance <= interactRadius;
 
-        // Tampilkan/sembunyikan prompt
         interactPromptText.gameObject.SetActive(isInRange);
 
         if (isInRange && Input.GetKey(KeyCode.E))
         {
-            // Tahan E → naikkan timer
             holdTimer += Time.deltaTime;
             progressBarUI.SetActive(true);
             progressBarFill.fillAmount = holdTimer / activationTime;
@@ -44,7 +42,6 @@ public class GeneratorSystem : MonoBehaviour
         }
         else
         {
-            // Lepas E → reset timer
             holdTimer = 0f;
             progressBarUI.SetActive(false);
         }
@@ -57,8 +54,14 @@ public class GeneratorSystem : MonoBehaviour
         progressBarUI.SetActive(false);
         interactPromptText.gameObject.SetActive(false);
 
-        // Buka pintu
         door.OpenDoor();
+
+        LevelManager.Instance.generatorActivated = true;
+    }
+
+    public void SetActivated(bool activated)
+    {
+        isActivated = activated;
     }
 
     void OnDrawGizmosSelected()
